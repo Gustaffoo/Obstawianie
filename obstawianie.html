@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obstawianie meczu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #2e2e33;
+            padding: 20px;
+        }
+        .match-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .team-container {
+            text-align: center;
+            margin: 20px;
+        }
+        .team-name {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .team-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .bet-button {
+            padding: 10px 20px;
+            background-color: #000000;
+            color: #ff0000;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+        .bet-button:hover {
+            background-color: #ffffff;
+        }
+        .bet-button:disabled {
+            background-color: #621cdb;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Obstawianie meczu</h1>
+
+    <div class="match-container">
+        <!-- Pierwsza para drużyn -->
+        <div class="team-container">
+            <img class="team-image" src="polska.png" alt="Drużyna A">
+            <div class="team-name">Drużyna A</div>
+            <button id="betButtonDrużynaA" class="bet-button" onclick="placeBet('DrużynaA', 'DrużynaB')">Obstaw</button>
+            <p id="votesDrużynaA">Liczba głosów: 0</p>
+        </div>
+
+        <div class="team-container">
+            <img class="team-image" src="austria.png" alt="Drużyna B">
+            <div class="team-name">Drużyna B</div>
+            <button id="betButtonDrużynaB" class="bet-button" onclick="placeBet('DrużynaB', 'DrużynaA')">Obstaw</button>
+            <p id="votesDrużynaB">Liczba głosów: 0</p>
+        </div>
+    </div>
+
+    <div class="match-container">
+        <!-- Druga para drużyn -->
+        <div class="team-container">
+            <img class="team-image" src="Niemcy.png" alt="Drużyna C">
+            <div class="team-name">Drużyna C</div>
+            <button id="betButtonDrużynaC" class="bet-button" onclick="placeBet('DrużynaC', 'DrużynaD')">Obstaw</button>
+            <p id="votesDrużynaC">Liczba głosów: 0</p>
+        </div>
+
+        <div class="team-container">
+            <img class="team-image" src="Węgry.png" alt="Drużyna D">
+            <div class="team-name">Drużyna D</div>
+            <button id="betButtonDrużynaD" class="bet-button" onclick="placeBet('DrużynaD', 'DrużynaC')">Obstaw</button>
+            <p id="votesDrużynaD">Liczba głosów: 0</p>
+        </div>
+    </div>
+
+    <div class="match-container">
+        <!-- Trzecia para drużyn -->
+        <div class="team-container">
+            <img class="team-image" src="szkocja.png" alt="Drużyna E">
+            <div class="team-name">Drużyna E</div>
+            <button id="betButtonDrużynaE" class="bet-button" onclick="placeBet('DrużynaE', 'DrużynaF')">Obstaw</button>
+            <p id="votesDrużynaE">Liczba głosów: 0</p>
+        </div>
+
+        <div class="team-container">
+            <img class="team-image" src="szwajcaria.png" alt="Drużyna F">
+            <div class="team-name">Drużyna F</div>
+            <button id="betButtonDrużynaF" class="bet-button" onclick="placeBet('DrużynaF', 'DrużynaE')">Obstaw</button>
+            <p id="votesDrużynaF">Liczba głosów: 0</p>
+        </div>
+    </div>
+
+    <div class="match-container">
+        <!-- Czwarta para drużyn -->
+        <div class="team-container">
+            <img class="team-image" src="Słowenia.png" alt="Drużyna G">
+            <div class="team-name">Drużyna G</div>
+            <button id="betButtonDrużynaG" class="bet-button" onclick="placeBet('DrużynaG', 'DrużynaH')">Obstaw</button>
+            <p id="votesDrużynaG">Liczba głosów: 0</p>
+        </div>
+
+        <div class="team-container">
+            <img class="team-image" src="serbia.png" alt="Drużyna H">
+            <div class="team-name">Drużyna H</div>
+            <button id="betButtonDrużynaH" class="bet-button" onclick="placeBet('DrużynaH', 'DrużynaG')">Obstaw</button>
+            <p id="votesDrużynaH">Liczba głosów: 0</p>
+        </div>
+    </div>
+
+    <script>
+        // Funkcja obsługująca głosowanie
+        function placeBet(team, opponentTeam) {
+            // Sprawdź, czy użytkownik już głosował na którąś z drużyn z pary
+            let userVotedTeam = localStorage.getItem(`voted_${team}`);
+            let userVotedOpponent = localStorage.getItem(`voted_${opponentTeam}`);
+            
+            if (userVotedTeam || userVotedOpponent) {
+                alert("Możesz zagłosować tylko na jedną drużynę z pary!");
+                return;
+            }
+
+            // Inkrementuj liczbę głosów dla wybranej drużyny
+            let votes = localStorage.getItem(team) ? parseInt(localStorage.getItem(team)) : 0;
+            votes++;
+            localStorage.setItem(team, votes.toString());
+
+            // Zapisz informację o głosie użytkownika dla drużyny
+            localStorage.setItem(`voted_${team}`, 'true');
+
+            // Zaktualizuj wyświetlaną liczbę głosów i dezaktywuj przycisk
+            document.getElementById(`votes${team}`).textContent = `Liczba głosów: ${votes}`;
+            document.getElementById(`betButton${team}`).disabled = true;
+        }
+
+        // Funkcja inicjalizująca liczbę głosów i stan przycisków
+        function initializeVotes() {
+            ['DrużynaA', 'DrużynaB', 'DrużynaC', 'DrużynaD', 'DrużynaE', 'DrużynaF', 'DrużynaG', 'DrużynaH'].forEach(team => {
+                let votes = localStorage.getItem(team);
+                if (votes) {
+                    document.getElementById(`votes${team}`).textContent = `Liczba głosów: ${votes}`;
+                }
+                let userVoted = localStorage.getItem(`voted_${team}`);
+                if (userVoted) {
+                    document.getElementById(`betButton${team}`).disabled = true;
+                }
+            });
+        }
+
+        initializeVotes();
+    </script>
+</body>
+</html>
